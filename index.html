@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>牛马TI | NMTI 职场人格鉴定</title>
+    <meta name="description" content="16道职场灵魂拷问，鉴定你是16种牛马中的哪一种。附送合作搭子、避雷指南和专属生存妙招。">
+    <meta property="og:title" content="牛马TI | 你是哪种职场牛马？">
+    <meta property="og:description" content="16道题鉴定你的职场牛马人格，附送搭子推荐和避雷指南">
+    <meta property="og:type" content="website">
+    <link rel="stylesheet" href="css/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@300;400;500;700;900&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- ========== 首页 ========== -->
+    <div id="page-home" class="page active">
+        <div class="container">
+            <div class="hero">
+                <div class="logo-ring">
+                    <span class="logo-emoji">🐂</span>
+                </div>
+                <span class="badge">NMTI · Niu-Ma Type Indicator</span>
+                <h1>牛马TI<br><small>职场人格鉴定</small></h1>
+                <p class="hero-sub">16道职场灵魂拷问<br>精准锁定你的牛马品种</p>
+                <div class="hero-stats">
+                    <div class="stat"><span class="stat-num">16</span><span class="stat-label">牛马品种</span></div>
+                    <div class="stat-dot"></div>
+                    <div class="stat"><span class="stat-num">4</span><span class="stat-label">核心维度</span></div>
+                    <div class="stat-dot"></div>
+                    <div class="stat"><span class="stat-num">2min</span><span class="stat-label">鉴定时间</span></div>
+                </div>
+                <button class="btn-start" id="btn-start">开始牛马鉴定</button>
+                <p class="hero-note">无需注册 · 仅供娱乐 · 测完别哭</p>
+            </div>
+            <div class="home-footer">
+                <span>Powered by <a href="https://evomap.ai" target="_blank">evomap</a></span>
+            </div>
+        </div>
+    </div>
+
+    <!-- ========== 测试页 ========== -->
+    <div id="page-test" class="page">
+        <div class="container test-container">
+            <div class="test-header">
+                <div class="test-progress">
+                    <div class="test-progress-fill" id="progress-fill"></div>
+                </div>
+                <span class="test-count" id="test-count">1/16</span>
+            </div>
+            <div class="test-dim-hint" id="dim-hint"></div>
+            <div class="test-body" id="test-body">
+                <h2 class="test-q" id="test-q"></h2>
+                <div class="test-options">
+                    <button class="opt-btn" id="opt-a" data-choice="a"></button>
+                    <div class="opt-vs">VS</div>
+                    <button class="opt-btn" id="opt-b" data-choice="b"></button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ========== 加载页 ========== -->
+    <div id="page-loading" class="page">
+        <div class="container loading-container">
+            <div class="loader-wrap">
+                <div class="loader"></div>
+                <span class="loader-emoji">🐂</span>
+            </div>
+            <h2 id="loading-text">正在鉴定你的牛马品种...</h2>
+            <div class="loading-bar">
+                <div class="loading-bar-fill" id="loading-bar-fill"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ========== 结果页 ========== -->
+    <div id="page-result" class="page">
+        <div class="container">
+            <div class="result-card" id="result-card">
+                <div class="result-header">
+                    <div class="result-tag">NMTI 职场牛马鉴定报告</div>
+                    <div class="result-type-code" id="result-code"></div>
+                </div>
+                <div class="result-hero">
+                    <span class="result-emoji" id="result-emoji"></span>
+                    <h1 class="result-name" id="result-name"></h1>
+                    <p class="result-subtitle" id="result-subtitle"></p>
+                </div>
+                <p class="result-desc" id="result-desc"></p>
+
+                <div class="result-section">
+                    <h3>📊 牛马属性面板</h3>
+                    <div class="result-bars" id="result-bars"></div>
+                </div>
+
+                <div class="result-section">
+                    <h3>📐 四维倾向</h3>
+                    <div class="dim-scales" id="dim-scales"></div>
+                </div>
+
+                <div class="result-section">
+                    <h3>🤝 最佳搭子</h3>
+                    <div class="partner-cards" id="partners"></div>
+                </div>
+
+                <div class="result-section">
+                    <h3>⚠️ 远离警告</h3>
+                    <div class="avoid-cards" id="avoids"></div>
+                </div>
+
+                <div class="result-section">
+                    <h3>💡 职场生存指南</h3>
+                    <ul class="tips-list" id="tips"></ul>
+                </div>
+
+                <div class="result-section">
+                    <h3>🏷️ 职场标签</h3>
+                    <div class="label-tags" id="labels"></div>
+                </div>
+            </div>
+
+            <div class="result-actions">
+                <button class="btn-share" id="btn-share">📋 复制分享文案</button>
+                <button class="btn-retry" id="btn-retry">🔄 再测一次</button>
+            </div>
+            <div class="result-footer">
+                <span>牛马TI · <a href="https://evomap.ai" target="_blank">evomap</a></span>
+                <br><small>仅供娱乐 · 测出牛马也别太难过</small>
+            </div>
+        </div>
+    </div>
+
+    <div class="toast" id="toast"></div>
+    <script src="js/data.js"></script>
+    <script src="js/app.js"></script>
+</body>
+</html>
