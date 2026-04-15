@@ -20,8 +20,8 @@
                     <span class="logo-emoji">🐂</span>
                 </div>
                 <span class="badge">NMTI · Niu-Ma Type Indicator</span>
-                <h1>牛马TI<br><small>职场人格鉴定</small></h1>
-                <p class="hero-sub">16道职场灵魂拷问<br>精准锁定你的牛马品种</p>
+                <h1>牛马TI<br><small>打工人格鉴定</small></h1>
+                <p class="hero-sub">16道打工人灵魂拷问<br>测测你是哪种牲口</p>
                 <div class="hero-stats">
                     <div class="stat"><span class="stat-num">16</span><span class="stat-label">牛马品种</span></div>
                     <div class="stat-dot"></div>
@@ -29,8 +29,8 @@
                     <div class="stat-dot"></div>
                     <div class="stat"><span class="stat-num">2min</span><span class="stat-label">鉴定时间</span></div>
                 </div>
-                <button class="btn-start" id="btn-start">开始牛马鉴定</button>
-                <p class="hero-note">无需注册 · 仅供娱乐 · 测完别哭</p>
+                <button class="btn-start" id="btn-start">开始鉴定</button>
+                <p class="hero-note">无需注册 · 仅供娱乐 · 测完别哭 · 哭完继续上班</p>
             </div>
             <div class="home-footer">
                 <span>Powered by <a href="https://evomap.ai" target="_blank">evomap</a></span>
@@ -42,6 +42,7 @@
     <div id="page-test" class="page">
         <div class="container test-container">
             <div class="test-header">
+                <button class="btn-back" id="btn-back" title="上一题">&#8592;</button>
                 <div class="test-progress">
                     <div class="test-progress-fill" id="progress-fill"></div>
                 </div>
@@ -66,7 +67,7 @@
                 <div class="loader"></div>
                 <span class="loader-emoji">🐂</span>
             </div>
-            <h2 id="loading-text">正在鉴定你的牛马品种...</h2>
+            <h2 id="loading-text">正在扫描你的牛马基因...</h2>
             <div class="loading-bar">
                 <div class="loading-bar-fill" id="loading-bar-fill"></div>
             </div>
@@ -82,7 +83,7 @@
                     <div class="result-type-code" id="result-code"></div>
                 </div>
                 <div class="result-hero">
-                    <span class="result-emoji" id="result-emoji"></span>
+                    <div class="result-icon" id="result-icon"></div>
                     <h1 class="result-name" id="result-name"></h1>
                     <p class="result-subtitle" id="result-subtitle"></p>
                 </div>
@@ -125,7 +126,7 @@
             </div>
             <div class="result-footer">
                 <span>牛马TI · <a href="https://evomap.ai" target="_blank">evomap</a></span>
-                <br><small>仅供娱乐 · 测出牛马也别太难过</small>
+                <br><small>仅供娱乐 · 测完还得继续上班</small>
             </div>
         </div>
     </div>

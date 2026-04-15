@@ -4,11 +4,13 @@
 const App = {
     idx: 0,
     scores: { E: 0, I: 0, S: 0, N: 0, T: 0, F: 0, J: 0, P: 0 },
+    history: [], // 记录每题选择，支持返回
 
     init() {
         document.getElementById('btn-start').onclick = () => this.start();
         document.getElementById('opt-a').onclick = () => this.pick('a');
         document.getElementById('opt-b').onclick = () => this.pick('b');
+        document.getElementById('btn-back').onclick = () => this.goBack();
         document.getElementById('btn-share').onclick = () => this.share();
         document.getElementById('btn-retry').onclick = () => { this.reset(); this.show('home'); };
     },
@@ -22,6 +24,7 @@ const App = {
     reset() {
         this.idx = 0;
         this.scores = { E: 0, I: 0, S: 0, N: 0, T: 0, F: 0, J: 0, P: 0 };
+        this.history = [];
     },
 
     start() {
@@ -40,6 +43,10 @@ const App = {
         document.getElementById('opt-b').textContent = q.b;
         document.getElementById('dim-hint').textContent = DIM_HINTS[q.dim] || '';
 
+        // 返回按钮状态
+        const backBtn = document.getElementById('btn-back');
+        backBtn.disabled = this.idx === 0;
+
         const body = document.getElementById('test-body');
         body.classList.remove('slide-in');
         void body.offsetWidth;
@@ -51,6 +58,9 @@ const App = {
         const dim = q.dim;
         if (choice === 'a') this.scores[dim[0]]++;
         else this.scores[dim[1]]++;
+
+        // 记录历史
+        this.history.push({ idx: this.idx, choice, dim });
 
         const btn = document.getElementById('opt-' + choice);
         btn.classList.add('picked');
@@ -71,14 +81,33 @@ const App = {
         }, 250);
     },
 
+    goBack() {
+        if (this.history.length === 0) return;
+
+        // 撤销上一次选择
+        const last = this.history.pop();
+        const dim = last.dim;
+        if (last.choice === 'a') this.scores[dim[0]]--;
+        else this.scores[dim[1]]--;
+
+        this.idx = last.idx;
+
+        // 反向滑动动画
+        const body = document.getElementById('test-body');
+        body.style.animation = 'none';
+        void body.offsetWidth;
+        body.style.animation = '';
+        this.render();
+    },
+
     analyze() {
         this.show('loading');
         const texts = [
-            '正在鉴定你的牛马品种...',
-            '分析摸鱼倾向...',
-            '计算内卷指数...',
-            '匹配职场人设...',
-            '生成牛马报告...',
+            '正在扫描你的牛马基因...',
+            '检测打工倦怠指数...',
+            '分析摸鱼技巧等级...',
+            '计算被PUA概率...',
+            '匹配你的牲口品种...',
         ];
         let i = 0;
         const el = document.getElementById('loading-text');
@@ -126,12 +155,13 @@ const App = {
         if (!t) { this.show('home'); return; }
 
         document.getElementById('result-code').textContent = code;
-        document.getElementById('result-emoji').textContent = t.emoji;
+        // 图标占位 — 等aeka出图后替换
+        document.getElementById('result-icon').textContent = code.charAt(0);
         document.getElementById('result-name').textContent = t.name;
         document.getElementById('result-subtitle').textContent = t.subtitle;
         document.getElementById('result-desc').textContent = t.desc;
 
-        // Dimension bars
+        // 属性条
         const barsEl = document.getElementById('result-bars');
         barsEl.innerHTML = '';
         const colors = ['#7c5cff', '#00d4aa', '#ff6b9d', '#ffd93d'];
@@ -143,7 +173,7 @@ const App = {
             setTimeout(() => d.querySelector('.bar-fill').style.width = val + '%', 150);
         });
 
-        // Dimension scales
+        // 四维倾向
         const dimEl = document.getElementById('dim-scales');
         dimEl.innerHTML = '';
         const pcts = this.getDimPercents();
@@ -167,30 +197,30 @@ const App = {
             setTimeout(() => row.querySelector('.dim-dot').style.left = pct + '%', 200);
         });
 
-        // Partners
+        // 搭子 — 显示 MBTI+名字
         const pEl = document.getElementById('partners');
         pEl.innerHTML = '';
         t.partners.forEach((p, i) => {
             const pt = TYPES[p];
             if (!pt) return;
-            pEl.innerHTML += `<div class="mate-card"><div class="mate-top"><span class="mate-code">${p}</span><span class="mate-name">${pt.emoji} ${pt.name}</span></div><div class="mate-why">${t.partnerWhy[i] || ''}</div></div>`;
+            pEl.innerHTML += `<div class="mate-card"><div class="mate-top"><span class="mate-code">${p}</span><span class="mate-name">${pt.name.replace(p + ' ', '')}</span></div><div class="mate-why">${t.partnerWhy[i] || ''}</div></div>`;
         });
 
-        // Avoids
+        // 远离
         const aEl = document.getElementById('avoids');
         aEl.innerHTML = '';
         t.avoids.forEach((a, i) => {
             const at = TYPES[a];
             if (!at) return;
-            aEl.innerHTML += `<div class="mate-card"><div class="mate-top"><span class="mate-code">${a}</span><span class="mate-name">${at.emoji} ${at.name}</span></div><div class="mate-why">${t.avoidWhy[i] || ''}</div></div>`;
+            aEl.innerHTML += `<div class="mate-card"><div class="mate-top"><span class="mate-code">${a}</span><span class="mate-name">${at.name.replace(a + ' ', '')}</span></div><div class="mate-why">${t.avoidWhy[i] || ''}</div></div>`;
         });
 
-        // Tips
+        // 生存指南
         const tEl = document.getElementById('tips');
         tEl.innerHTML = '';
         t.tips.forEach(tip => { tEl.innerHTML += `<li>${tip}</li>`; });
 
-        // Labels
+        // 标签
         const lEl = document.getElementById('labels');
         lEl.innerHTML = '';
         const lc = ['a', 'b', 'c'];
@@ -204,25 +234,26 @@ const App = {
         const t = TYPES[code];
         if (!t) return;
         const pcts = this.getDimPercents();
+        const shortName = t.name.replace(code + ' ', '');
         const text = [
-            `🐂 我的牛马TI鉴定结果：`,
+            `我的牛马TI鉴定结果：`,
             ``,
-            `【${code} · ${t.name} ${t.emoji}】`,
+            `【${t.name}】`,
             `"${t.subtitle}"`,
             ``,
             `E${pcts.EI}% | S${pcts.SN}% | T${pcts.TF}% | J${pcts.JP}%`,
             ``,
-            `最佳搭子：${t.partners.map(p => TYPES[p]?.name).join('、')}`,
-            `远离警告：${t.avoids.map(a => TYPES[a]?.name).join('、')}`,
+            `最佳搭子：${t.partners.map(p => TYPES[p]?.name.replace(p + ' ', '')).join('、')}`,
+            `远离警告：${t.avoids.map(a => TYPES[a]?.name.replace(a + ' ', '')).join('、')}`,
             `标签：${t.labels.join(' | ')}`,
             ``,
-            `你是哪种职场牛马？来测 👉 qishisuren123.github.io/niuma-ti`,
+            `你是哪种打工牲口？来测 👉 qishisuren123.github.io/niuma-ti`,
             `#牛马TI #NMTI #evomap`
         ].join('\n');
 
         if (navigator.clipboard?.writeText) {
             navigator.clipboard.writeText(text)
-                .then(() => this.toast('已复制，快去发给同事！'))
+                .then(() => this.toast('已复制，发给工友们！'))
                 .catch(() => this.fallbackCopy(text));
         } else {
             this.fallbackCopy(text);
@@ -235,7 +266,7 @@ const App = {
         ta.style.cssText = 'position:fixed;opacity:0';
         document.body.appendChild(ta);
         ta.select();
-        try { document.execCommand('copy'); this.toast('已复制，快去发给同事！'); }
+        try { document.execCommand('copy'); this.toast('已复制，发给工友们！'); }
         catch { this.toast('复制失败，请手动复制'); }
         document.body.removeChild(ta);
     },
